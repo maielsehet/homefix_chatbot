@@ -269,37 +269,22 @@ homefix-ai/
 
 │
 
-├── app/
+app/
+ ├── api
+ ├── models
+ ├── rag
+ ├── services
+ ├── utils
 
-│ ├── api/
+Data/
+ ├── Documents
+ ├── Google sheet
+ ├── Processed
 
-│ ├── rag/
+Tests/
 
-│ ├── services/
 
-│ ├── models/
-
-│ └── utils/
-
-│
-
-├── data/
-
-│
-
-├── vector_db/
-
-│
-
-├── tests/
-
-│
-
-├── requirements.txt
-
-├── README.md
-
-└── main.py
+main.py
 ```
 
 ---
