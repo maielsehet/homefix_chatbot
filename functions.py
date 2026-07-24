@@ -1,3 +1,4 @@
+from langchain_core import documents
 import pandas as pd 
 import re   
 import os
@@ -67,4 +68,19 @@ def cleaning_data():
 
 
 #------------------------------------------------------------------------
-
+#Document & Metadata
+from langchain_core.documents import Document
+import glob
+file="homefix_chatbot/Data/Processed"
+file_paths=glob.glob(os.path.join(file, "*.txt"))
+documents = []
+for path in file_paths:
+    with open(path, 'r', encoding='utf-8-sig') as f:
+        content = f.read()
+    doc=Document(
+        page_content=content,
+        metadata={"source":os.path.basename(path)}
+        )
+    documents.append(doc)
+print("number of documents:" ,len(documents))   
+#------------------------------------------------------------------------
