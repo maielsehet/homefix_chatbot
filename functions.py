@@ -1,3 +1,4 @@
+-----------------------------
 # from langchain_core import documents
 # import pandas as pd 
 # import re   
@@ -149,7 +150,7 @@ def row_to_document(row, source_file, row_id):
 
 # -----------------------------------------------------
 # Main Pipeline
-# -----------------------------------------------------
+# ------------------------
 
 def generate_documents():
 
@@ -214,46 +215,41 @@ def save_documents(documents):
             f.write("\n\n")
 
 
-# -----------------------------------------------------
-# Run
-# -----------------------------------------------------
 
-if __name__ == "__main__":
 
-    documents = generate_documents()
 
-    save_documents(documents)
 
 # ----------------------------------------------------
 # vector database & embeddinds 
 #-----------------------------------------------------
-from fastembed import TextEmbedding
-import chromadb
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
 
-def create_and_store_embeddings(documents, collection_name="homefix_knowledge_base"):
-    # Load fast embedding model
-    embedding_model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
-    
-    # Setup chroma db client
-    chroma_client = chromadb.PersistentClient(path="./chroma_db")
-    collection = chroma_client.get_or_create_collection(name=collection_name)
-    
-    # Prepare texts, metadatas, and ids
-    texts = [doc.page_content for doc in documents]
-    metadatas = [doc.metadata for doc in documents]
-    ids = [f"doc_{i+1}" for i in range(len(documents))]
-    
-    # Generate embeddings
-    embeddings = list(embedding_model.embed(texts))
-    embeddings = [e.tolist() for e in embeddings]
-    
-    # Store in chroma
-    collection.add(
-        documents=texts,
-        embeddings=embeddings,
-        metadatas=metadatas,
-        ids=ids
+def create_and_store_embeddings(documents):
+
+    # Load multilingual embedding model
+    embedding_model = HuggingFaceEmbeddings(
+        model_name="BAAI/bge-m3",
+        model_kwargs={"device": "cpu"},   # Change to "cuda" if using NVIDIA GPU
+        encode_kwargs={"normalize_embeddings": True}
     )
-    
-    print("Embeddings stored successfully")
-    return collection
+
+    # Create Chroma Vector Store
+    vector_store = Chroma.from_documents(
+        documents=documents,
+        embedding=embedding_model,
+        persist_directory="Data/chroma_db",
+        collection_name="homefix_knowledge_base"
+    )
+
+    print("Embeddings stored successfully!")
+
+    return vector_store
+
+
+if name == "main":
+
+    documents = generate_documents()
+
+    save_documents(documents)  
+    vector_store = create_and_store_embeddings(documents)
