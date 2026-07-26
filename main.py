@@ -1,3 +1,8 @@
-from rag.prompt import build_prompt
+from app.rag.retrievement import retrieve_documents
 
-# TODO: use build_prompt(query, docs) here
+docs = retrieve_documents("السخان لا يبرد")
+print(f"got {len(docs)} docs")
+for d in docs:
+    print(d.page_content)
+    print(d.metadata)
+    print("---")
