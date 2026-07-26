@@ -151,15 +151,5 @@ def create_and_store_embeddings(documents):
     return vector_store
 
 
-# if __name__ == "__main__":
 
-#     # if not os.path.exists("Data/chroma_db"):
-#     documents = generate_documents()
-#     save_documents(documents)
-#     vector_store = create_and_store_embeddings(documents)
-#     print("Stored:", vector_store._collection.count())
-
-
-
-    
 

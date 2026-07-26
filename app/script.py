@@ -1,5 +1,5 @@
-from app.rag.embeddind import create_and_store_embeddings
-from app.utils.functions import generate_documents,save_documents
+from rag.embeddind import create_and_store_embeddings
+from utils.functions import generate_documents,save_documents
 import sys
 sys.stdout.reconfigure(encoding="utf-8")
 
