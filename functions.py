@@ -1,4 +1,5 @@
 
+
 # from langchain_core import documents
 # import pandas as pd 
 # import re   
@@ -93,35 +94,35 @@
 # #------------------------------------------------------------------------
 
 
+
 import os
 import re
 import glob
 import pandas as pd
+from app.rag.embeddind import create_and_store_embeddings
 from langchain_core.documents import Document
+from app.rag.generation import generate_responce
+import sys
+sys.stdout.reconfigure(encoding="utf-8")
 
-# -----------------------------------------------------
-# Cleaning Functions
-# -----------------------------------------------------
+# -----------------------cleaning------------------------------
 
 def clean(text):
-    """Clean Arabic text."""
     if pd.isna(text):
         return ""
 
     text = str(text)
 
-    # Remove unwanted punctuation
+    # remove unwanted punctuation
     text = re.sub(r"[().،:]", "", text)
 
-    # Remove extra spaces
+    # remove extra spaces
     text = re.sub(r"\s+", " ", text)
 
     return text.strip()
 
 
-# -----------------------------------------------------
-# Convert one row into one Document
-# -----------------------------------------------------
+# --------------------------Convert one row into one Document---------------------------
 
 def row_to_document(row, source_file, row_id):
     page_content = f"""
@@ -137,7 +138,6 @@ def row_to_document(row, source_file, row_id):
 
     metadata = {
         "category": row["category"],
-        "device": row["category"],
         "source": source_file,
         "row_id": row_id
     }
@@ -148,9 +148,7 @@ def row_to_document(row, source_file, row_id):
     )
 
 
-# -----------------------------------------------------
-# Main Pipeline
-# -----------------------------------------------------
+# ----------------------------generate documents-------------------------
 
 def generate_documents():
 
@@ -158,20 +156,24 @@ def generate_documents():
 
     documents = []
 
+    # get all csv files 
     csv_files = glob.glob(os.path.join(csv_folder, "*.csv"))
 
     for csv_file in csv_files:
 
         df = pd.read_csv(csv_file, encoding="utf-8-sig")
 
-        # Remove duplicates
+        # remove duplicates
         df = df.drop_duplicates()
+        # 0,1,2,3, after drop null will be for ex: 0,1,3,4,7 this return index agsin
+        df.reset_index(drop=True)
 
-        # Clean columns
+        # clean columns
         df["problem"] = df["problem"].apply(clean)
         df["category"] = df["category"].apply(clean)
         df["solution"] = df["solution"].apply(clean)
 
+        #  get sourse naem
         source_name = os.path.basename(csv_file)
 
         for index, row in df.iterrows():
@@ -179,20 +181,17 @@ def generate_documents():
             document = row_to_document(
                 row=row,
                 source_file=source_name,
-                row_id=index
+                row_id=int(index)   #numpy.int64 
             )
 
             documents.append(document)
 
-    print(f"Total Documents: {len(documents)}")
+    print(f"total documents: {len(documents)}")
 
     return documents
 
 
-# -----------------------------------------------------
-# Save documents for debugging (Optional)
-# -----------------------------------------------------
-
+# ------------------save documents-------------------
 def save_documents(documents):
 
     os.makedirs("Data/Documents", exist_ok=True)
@@ -219,6 +218,7 @@ def save_documents(documents):
 
 
 
+
 # ----------------------------------------------------
 # vector database & embeddinds 
 #-----------------------------------------------------
@@ -239,7 +239,7 @@ def create_and_store_embeddings(documents):
         documents=documents,
         embedding=embedding_model,
         persist_directory="Data/chroma_db",
-        collection_name="homefix_knowledge_base"
+        collection_name="homefix_db"
     )
 
     print("Embeddings stored successfully!")
@@ -249,7 +249,15 @@ def create_and_store_embeddings(documents):
 
 if __name__ == "__main__":
 
+    # if not os.path.exists("Data/chroma_db"):
     documents = generate_documents()
-
-    save_documents(documents)  
+    save_documents(documents)
     vector_store = create_and_store_embeddings(documents)
+    print("Stored:", vector_store._collection.count())
+
+
+
+    query = "السخان لا يسخن"
+    response = generate_response(query)
+    print(response)
+
