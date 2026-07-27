@@ -1,4 +1,9 @@
------------------------------
+import os
+import re
+import glob
+import pandas as pd
+from langchain_core.documents import Document
+
 # from langchain_core import documents
 # import pandas as pd 
 # import re   
@@ -92,12 +97,6 @@
 # print("number of documents:" ,len(documents))   
 # #------------------------------------------------------------------------
 
-
-import os
-import re
-import glob
-import pandas as pd
-from langchain_core.documents import Document
 
 # -----------------------------------------------------
 # Cleaning Functions
@@ -215,10 +214,6 @@ def save_documents(documents):
             f.write("\n\n")
 
 
-
-
-
-
 # ----------------------------------------------------
 # vector database & embeddinds 
 #-----------------------------------------------------
@@ -247,9 +242,10 @@ def create_and_store_embeddings(documents):
     return vector_store
 
 
-if name == "main":
+if __name__ == "main":
 
     documents = generate_documents()
 
     save_documents(documents)  
     vector_store = create_and_store_embeddings(documents)
+ 
