@@ -1,0 +1,17 @@
+import pyarabic.araby as araby
+
+# نص فيه تشكيل وهمزات مختلفة وتطويل
+sample_text = "أَهْلاً وَسَهْلاً بِكُمْ فِي مَشْرُوعِ هومـــفيكس"
+
+#  إزالة التشكيل
+text_no_tashkeel = araby.strip_tashkeel(sample_text)
+
+# 2. إزالة التطويل (ــــ)
+text_clean = araby.strip_tatweel(text_no_tashkeel)
+
+# 3. توحيد الألفات والهمزات (أ، إ، آ -> ا)
+text_normalized = araby.normalize_ligature(text_clean)
+
+print("النص بعد التنظيف الأساسي:")
+print(text_normalized)
+# النتيجة هتكون: "اهلا وسهلا بكم في مشروع هومفيكس"
