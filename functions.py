@@ -1,3 +1,4 @@
+-----------------------------
 # from langchain_core import documents
 # import pandas as pd 
 # import re   
@@ -149,7 +150,11 @@ def row_to_document(row, source_file, row_id):
 
 # -----------------------------------------------------
 # Main Pipeline
+<<<<<<< HEAD
 # -----------------------------------------------------
+=======
+# ------------------------
+>>>>>>> 88482a3a227151341213db34e571729965914eb6
 
 def generate_documents():
 
@@ -214,6 +219,7 @@ def save_documents(documents):
             f.write("\n\n")
 
 
+<<<<<<< HEAD
 # -----------------------------------------------------
 # Run
 # -----------------------------------------------------
@@ -223,10 +229,16 @@ if __name__ == "__main__":
     documents = generate_documents()
 
     save_documents(documents)
+=======
+
+
+
+>>>>>>> 88482a3a227151341213db34e571729965914eb6
 
 # ----------------------------------------------------
 # vector database & embeddinds 
 #-----------------------------------------------------
+<<<<<<< HEAD
 from fastembed import TextEmbedding
 import chromadb
 
@@ -257,3 +269,36 @@ def create_and_store_embeddings(documents, collection_name="homefix_knowledge_ba
     
     print("Embeddings stored successfully")
     return collection
+=======
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+
+def create_and_store_embeddings(documents):
+
+    # Load multilingual embedding model
+    embedding_model = HuggingFaceEmbeddings(
+        model_name="BAAI/bge-m3",
+        model_kwargs={"device": "cpu"},   # Change to "cuda" if using NVIDIA GPU
+        encode_kwargs={"normalize_embeddings": True}
+    )
+
+    # Create Chroma Vector Store
+    vector_store = Chroma.from_documents(
+        documents=documents,
+        embedding=embedding_model,
+        persist_directory="Data/chroma_db",
+        collection_name="homefix_knowledge_base"
+    )
+
+    print("Embeddings stored successfully!")
+
+    return vector_store
+
+
+if name == "main":
+
+    documents = generate_documents()
+
+    save_documents(documents)  
+    vector_store = create_and_store_embeddings(documents)
+>>>>>>> 88482a3a227151341213db34e571729965914eb6
