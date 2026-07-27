@@ -43,8 +43,8 @@ def simulate_chat(user_input):
 التخصص: {tech.get('specialization', 'غير محدد')}
 التقييم: ⭐ {tech.get('rating', '0')}
 الخبرة: {tech.get('experience', 'غير محددة')}
-سعر الكشف: {tech.get('price', 'غير محدد')}
-رقم الهاتف: {tech.get('phone', 'غير متاح')}
+# سعر الكشف: {tech.get('price', 'غير محدد')}
+# رقم الهاتف: {tech.get('phone', 'غير متاح')}
 """
     
     # 5. أضف رد المساعد للتاريخ (للسياق)
