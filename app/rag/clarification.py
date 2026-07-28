@@ -1,14 +1,15 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
+
+from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-llm = ChatGoogleGenerativeAI(
-    model="models/gemini-2.5-flash",
-    google_api_key=os.getenv("API_KEY"),
-    temperature=0
+llm = ChatOpenAI(
+    model="gpt-5",
+    api_key=os.getenv("API_KEY"),
+    temperature=0.3,
 )
 
 

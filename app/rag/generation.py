@@ -188,19 +188,18 @@ import json
 import re
 
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
-
+# from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from app.rag.prompt import build_prompt
 from app.rag.retrievement import retrieve_documents
 from Data.recommendation import recommend_technician
 
 load_dotenv()
 
-llm = ChatGoogleGenerativeAI(
-    # model="models/gemini-2.5-flash",
-    model="gemini-3.6-flash",
-    google_api_key=os.getenv("API_KEY"),
-    temperature=0.3
+llm = ChatOpenAI(
+    model="gpt-5",
+    api_key=os.getenv("API_KEY"),
+    temperature=0.3,
 )
 
 #  get responce as son with 
