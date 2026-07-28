@@ -2,3 +2,5 @@ chroma_db/
 _pycache_/
 *.pyc
 .env 
+log.txt
+temp_response.mp3

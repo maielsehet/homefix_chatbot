@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from fastapi import FastAPI
 from typing import Dict
 from pydantic import BaseModel
@@ -155,3 +156,8 @@ async def fun(request : chatResponce):
 # #         if user_input.lower() == "خروج":
 # #             break
 # #         simulate_chat(user_input)
+=======
+from rag.prompt import build_prompt
+
+# TODO: use build_prompt(query, docs) here
+>>>>>>> origin/master
