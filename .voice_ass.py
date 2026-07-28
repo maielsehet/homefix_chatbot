@@ -69,7 +69,7 @@ def speak_bot_output(text):
     try:
 
         with client.audio.speech.with_streaming_response.create(
-            model="gpt-4o-mini-tts",
+            model="whisper-1",
             voice="alloy",
             input=text
         ) as response:
