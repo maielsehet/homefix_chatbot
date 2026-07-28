@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+openai
+langchain-openai
+python-multipart
+langchain-google-genai   
+google-generativeai      
+speechrecognition        
+pydub 
