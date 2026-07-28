@@ -8,8 +8,7 @@ from langchain_chroma import Chroma
 
 def retrieve_documents(query, top_k=3):
     # load ChromaDB
-    # chroma_client = chromadb.PersistentClient(path="Data/chroma_db")
-    # collection = chroma_client.get_collection(name="homefix_db")
+  
     
     # load embedding model
     embedding_model = HuggingFaceEmbeddings(

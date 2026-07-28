@@ -15,8 +15,8 @@ load_dotenv()
 
  
 llm = ChatOpenAI(
-    model="gpt-4o-mini",          # or "gpt-4o" / "gpt-4.1-mini" depending on what you have access to
-    api_key=os.getenv("API_KEY"),  # same OpenAI key used for Whisper in main.py
+    model="gpt-4o-mini",          
+    api_key=os.getenv("API_KEY"),  
     temperature=0.3
 )
 

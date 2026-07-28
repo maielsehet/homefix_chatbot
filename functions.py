@@ -3,124 +3,28 @@ import re
 import glob
 import pandas as pd
 from langchain_core.documents import Document
-
-# from langchain_core import documents
-# import pandas as pd 
-# import re   
-# import os
-
-# #----------------------------cleaning stage --------------------------
-# #  remove spaces and unwanted punctuation
-# def clean(data):
-#     text = re.sub(r'[().،:]', '' , data)
-#     # remove unneeded spaces
-#     text = re.sub(r'\s+' , ' ' ,text)
-#     return text.strip()
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
 
 
-# #  prepare the result
-# def processed(row):
-#     problem = f"المشكله: {clean(row['problem'])} "
-#     category = f"النوع: {clean(row['category'])} "
-#     solution = f"الحل: {clean(row['solution'])} "
-#     # print(problem)
-#     # print(category)
-#     # print(solution)
-#     return problem + category + solution
-
-
-
-# def cleaning_data():
-#     #  to get file 
-#     path_from = 'Data/CSV files/'
-#     path_to = 'Data/Processed/'
-
-
-#     #  get files 
-#     files = [f for f in os.listdir(path_from) if f.endswith('.csv')]
-#     # files = ['اجهزة صغيرة' ,'السخان' ,'تكييف' , 'تلاجات' , 'حدادة' , 
-#     #         'خلاط وميكروووف و بوتجااز' , 'سباكه' , 'شاشات' , 'غسالات' ,
-#     #         'كهرباء و مراوح' , 'نجاره' ,'نقاشه']
-
-
-#     for file in files:
-#         source = os.path.join(path_from, file)
-#         destination = os.path.join(path_to, os.path.splitext(file)[0] + '.txt')
-
-#         # create a dataframe
-#         df = pd.read_csv(source , encoding='utf-8-sig')
-
-#         #  drop dublicates
-#         df.drop_duplicates(inplace=True)
-
-#         # apply clean on data 
-#         df['problem'] = df['problem'].apply(clean)
-#         df['category'] = df['category'].apply(clean)
-#         df['solution'] = df['solution'].apply(clean)
-
-
-
-#         # axis=1 ---> for apply on rows
-#         cleaned_data = df.apply(processed , axis=1)
-
-#         # add the cleand part to proceeded folder
-#         try:
-#             with open(destination , 'w' , encoding='utf-8-sig') as f:
-#                 #  use join since wite need string not series 
-#                 f.write(''.join(cleaned_data))  
-#         except (FileExistsError):
-#             print(f"file {destination} exists.")
-
-
-
-# #------------------------------------------------------------------------
-# #Document & Metadata
-# from langchain_core.documents import Document
-# import glob
-# file="Data/Processed"
-# file_paths=glob.glob(os.path.join(file, "*.txt"))
-# documents = []
-# for path in file_paths:
-#     with open(path, 'r', encoding='utf-8-sig') as f:
-#         content = f.read()
-#     doc=Document(
-#         page_content=content,
-#         metadata={"source":os.path.basename(path)}
-#         )
-#     documents.append(doc)
-#     # append  documents into Data\Documents
-#     with open("Data/Documents/documents.txt", "a", encoding='utf-8-sig') as f:
-#         f.write(f"source: {os.path.basename(path)}\n")
-#         f.write(content)
-#         f.write("\n\n")
-
-# print("number of documents:" ,len(documents))   
-# #------------------------------------------------------------------------
-
-
-# -----------------------------------------------------
-# Cleaning Functions
-# -----------------------------------------------------
-
+# ---------------------------------------clean text------------------------
 def clean(text):
-    """Clean Arabic text."""
+   
     if pd.isna(text):
         return ""
 
     text = str(text)
 
-    # Remove unwanted punctuation
+    # remove unwanted punctuation
     text = re.sub(r"[().،:]", "", text)
 
-    # Remove extra spaces
+    # remove extra spaces
     text = re.sub(r"\s+", " ", text)
 
     return text.strip()
 
 
-# -----------------------------------------------------
-# Convert one row into one Document
-# -----------------------------------------------------
+# ------------------------ convert row into Document -----------------------------
 
 def row_to_document(row, source_file, row_id):
     page_content = f"""
@@ -147,30 +51,25 @@ def row_to_document(row, source_file, row_id):
     )
 
 
-# -----------------------------------------------------
-# Main Pipeline
-<<<<<<< HEAD
-# -----------------------------------------------------
-=======
-# ------------------------
->>>>>>> 88482a3a227151341213db34e571729965914eb6
+
+# ----------------------generate_documents------------------------------- 
 
 def generate_documents():
-
+    #  get allcsv files
     csv_folder = "Data/CSV files"
 
     documents = []
-
+    #  get allcsv files
     csv_files = glob.glob(os.path.join(csv_folder, "*.csv"))
 
     for csv_file in csv_files:
 
         df = pd.read_csv(csv_file, encoding="utf-8-sig")
 
-        # Remove duplicates
+        # remove duplicates
         df = df.drop_duplicates()
 
-        # Clean columns
+        # rlean columns
         df["problem"] = df["problem"].apply(clean)
         df["category"] = df["category"].apply(clean)
         df["solution"] = df["solution"].apply(clean)
@@ -192,16 +91,15 @@ def generate_documents():
     return documents
 
 
-# -----------------------------------------------------
-# Save documents for debugging (Optional)
-# -----------------------------------------------------
+# ----------------------save_documents-------------------------------
 
 def save_documents(documents):
-
+    #  create dir
     os.makedirs("Data/Documents", exist_ok=True)
 
     output_path = "Data/Documents/documents.txt"
 
+    # utf-8-sig ---> arabic 
     with open(output_path, "w", encoding="utf-8-sig") as f:
 
         for i, doc in enumerate(documents):
@@ -218,10 +116,7 @@ def save_documents(documents):
             f.write("\n\n")
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-# -----------------------------------------------------
-# Run
+
 # -----------------------------------------------------
 
 if __name__ == "__main__":
@@ -229,39 +124,34 @@ if __name__ == "__main__":
     documents = generate_documents()
 
     save_documents(documents)
-=======
 
 
 
->>>>>>> 88482a3a227151341213db34e571729965914eb6
 
-=======
->>>>>>> 383908bd279048a7bc654fb9b2ea4bac79b1f367
-# ----------------------------------------------------
-# vector database & embeddinds 
-#-----------------------------------------------------
-<<<<<<< HEAD
+
+#----------------------------vector database & embeddinds -------------------------
+
 from fastembed import TextEmbedding
 import chromadb
 
 def create_and_store_embeddings(documents, collection_name="homefix_knowledge_base"):
-    # Load fast embedding model
+    # load fast embedding model
     embedding_model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
     
-    # Setup chroma db client
+    # setup chroma db client
     chroma_client = chromadb.PersistentClient(path="./chroma_db")
     collection = chroma_client.get_or_create_collection(name=collection_name)
     
-    # Prepare texts, metadatas, and ids
+    # prepare text metadatasand ids
     texts = [doc.page_content for doc in documents]
     metadatas = [doc.metadata for doc in documents]
     ids = [f"doc_{i+1}" for i in range(len(documents))]
     
-    # Generate embeddings
+    # generate embeddings
     embeddings = list(embedding_model.embed(texts))
     embeddings = [e.tolist() for e in embeddings]
     
-    # Store in chroma
+    # store in chroma
     collection.add(
         documents=texts,
         embeddings=embeddings,
@@ -271,26 +161,29 @@ def create_and_store_embeddings(documents, collection_name="homefix_knowledge_ba
     
     print("Embeddings stored successfully")
     return collection
-=======
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_chroma import Chroma
+
+
+
+# ------------------------------------create_and_store_embeddings------------------------------------
 
 def create_and_store_embeddings(documents):
 
-    # Load multilingual embedding model
+    # load multilingual embedding model
     embedding_model = HuggingFaceEmbeddings(
         model_name="BAAI/bge-m3",
-        model_kwargs={"device": "cpu"},   # Change to "cuda" if using NVIDIA GPU
+        model_kwargs={"device": "cpu"},   # "cuda" if using NVIDIA GPU
         encode_kwargs={"normalize_embeddings": True}
     )
 
-    # Create Chroma Vector Store
+
+    # create vector db
     vector_store = Chroma.from_documents(
         documents=documents,
         embedding=embedding_model,
         persist_directory="Data/chroma_db",
         collection_name="homefix_knowledge_base"
     )
+
 
     print("Embeddings stored successfully!")
 
@@ -303,8 +196,3 @@ if __name__ == "main":
 
     save_documents(documents)  
     vector_store = create_and_store_embeddings(documents)
-<<<<<<< HEAD
->>>>>>> 88482a3a227151341213db34e571729965914eb6
-=======
- 
->>>>>>> 383908bd279048a7bc654fb9b2ea4bac79b1f367
