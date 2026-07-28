@@ -3,7 +3,8 @@ import json
 import re
 
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
+
+from langchain_openai import ChatOpenAI
 
 from app.rag.prompt import build_prompt
 from app.rag.retrievement import retrieve_documents
@@ -11,10 +12,11 @@ from Data.recommendation import recommend_technician
 
 load_dotenv()
 
-llm = ChatGoogleGenerativeAI(
-    # model="models/gemini-2.5-flash",
-    model="gemini-3.6-flash",
-    google_api_key=os.getenv("API_KEY"),
+
+ 
+llm = ChatOpenAI(
+    model="gpt-4o-mini",          # or "gpt-4o" / "gpt-4.1-mini" depending on what you have access to
+    api_key=os.getenv("API_KEY"),  # same OpenAI key used for Whisper in main.py
     temperature=0.3
 )
 
