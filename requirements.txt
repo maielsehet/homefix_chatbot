@@ -1,9 +1,21 @@
-fastapi
-uvicorn[standard]
-openai
-langchain-openai
-python-multipart
-langchain-google-genai   
-google-generativeai      
-speechrecognition        
-pydub 
+# ─── Web API ────────────────────────────────────────────────
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0      # includes websockets and other extras
+python-multipart>=0.0.6        # handles file uploads (audio)
+
+# ─── OpenAI ──────────────────────────────────────────────────
+openai>=1.0.0                  # chat, Whisper transcription, TTS
+
+# ─── Speech & Audio ─────────────────────────────────────────
+SpeechRecognition>=3.10.0      # microphone input (Google STT)
+pygame>=2.5.0                  # audio playback for TTS responses
+
+# ─── Environment ─────────────────────────────────────────────
+python-dotenv>=1.0.0
+
+# ─── Data Processing & Embeddings (from cleaning.ipynb) ─────
+pandas>=2.0.0
+tqdm>=4.65.0
+huggingface_hub>=0.20.0        # for model caching
+chromadb>=0.4.0                # vector DB
+fastembed>=0.2.0               # local ONNX embeddings
