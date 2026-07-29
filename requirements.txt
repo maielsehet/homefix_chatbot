@@ -8,7 +8,8 @@ openai>=1.0.0                  # chat, Whisper transcription, TTS
 
 # ─── Speech & Audio ─────────────────────────────────────────
 SpeechRecognition>=3.10.0      # microphone input (Google STT)
-pygame>=2.5.0                  # audio playback for TTS responses
+pygame>=2.5.0                   # audio playback for TTS responses
+winget install ffmpeg               
 
 # ─── Environment ─────────────────────────────────────────────
 python-dotenv>=1.0.0
