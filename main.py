@@ -8,7 +8,7 @@ from Data.recommendation import recommend_technician
 from Data.technician import *
 import sqlite3
 import tempfile
-import speech_recognition as sr
+# import speech_recognition as sr
 from openai import OpenAI
 
 
